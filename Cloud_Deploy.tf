@@ -65,3 +65,4 @@ filter {
 output "public_ip_for_deploy" {
   value = aws_instance.web.public_ip
 }
+/*shit i'am tierd*/
