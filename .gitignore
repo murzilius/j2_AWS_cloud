@@ -1,0 +1,7 @@
+/db/*
+deploy.sh
+secrets.yml
+*.tfvars
+*.tfstate
+*.backup
+/.terraform
