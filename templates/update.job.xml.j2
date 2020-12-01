@@ -1,0 +1,46 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>*/60 * * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>if [ -d ./{{ github_repo }}	]; then
+  rm -r ./{{ github_repo }}
+fi
+
+git clone https://{{ github_token }}@{{ github_repo_path }} &amp;&amp; \
+cd ./{{ github_repo }} 
+
+if [ -d ./www ]; then
+ rm -r ./www
+fi
+
+curl -o wordpress.tar.gz -fSL &quot;https://wordpress.org/latest.tar.gz&quot; &amp;&amp; \
+tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  \
+rm wordpress.tar.gz &amp;&amp; \
+mv  ./wordpress ./www  &amp;&amp; \
+echo &quot;${BUILD_NUMBER}- `date`&quot; &gt; build_info &amp;&amp; \
+git add . &amp;&amp; \
+git commit -m &quot;Build Number: ${BUILD_NUMBER}&quot; &amp;&amp; \
+git push origin --all &amp;&amp; \
+cd .. &amp;&amp; \
+rm -r ./*
+#curl http://{{ username }}:{{ userpass }}@localhost:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,39 @@
+#!groovy
+import hudson.security.*
+import jenkins.model.*
+import hudson.security.csrf.DefaultCrumbIssuer
+def instance = Jenkins.getInstance()
+def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+def users = hudsonRealm.getAllUsers()
+instance.save()
+
+def instanceJ = Jenkins.instance
+instanceJ.setCrumbIssuer(null)
+instanceJ.save()
+
+System.setProperty("hudson.security.csrf.CrumbFilter", "false");
+System.setProperty("hudson.security.csrf", "false");
+System.setProperty("hudson.security.csrf.GlobalCrumbIssuerConfiguration", "false");
+
+users_s = users.collect { it.toString() }
+
+// Create the admin user account if it doesn't already exist.
+if ("admin" in users_s) {
+    println "Admin user already exists - updating password"
+
+    def user = hudson.model.User.get('{{ username }}');
+    def password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword('{{ userpass }}')
+    user.addProperty(password)
+    user.save()
+}
+else {
+    println "--> creating local admin user"
+
+    hudsonRealm.createAccount('{{ username }}', '{{ userpass }}')
+    instance.setSecurityRealm(hudsonRealm)
+
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+}
+
