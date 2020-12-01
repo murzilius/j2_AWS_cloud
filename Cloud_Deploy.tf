@@ -22,7 +22,7 @@ resource "aws_instance" "deploy" {
   vpc_security_group_ids = [ aws_security_group.test_security_group.id ]
   depends_on = [ aws_instance.web ] //Start order - after web
   key_name="AWS_for_test"
-  user_data = filetemplate("deploy.sh.tmpl",${public_ip_for_Web}) //Script for wake up ansible and get Credentials
+  user_data = templatefile("deploy.sh.tmpl", {public_ip_for_Web = aws_instance.web.public_ip})//Script for wake up ansible and get Credentials
 }
 
 resource "aws_security_group" "test_security_group" {

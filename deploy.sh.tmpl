@@ -1,0 +1,25 @@
+#!/bin/bash
+sudo add-apt-repository -y ppa:ansible/ansible
+sudo apt update
+sudo apt install -y ansible
+sudo apt install -y mc
+export USERNAME_J=admin
+export USERPASS_J=admin
+export MYSQL_ROOT_PASSWORD=admin
+export MYSQL_PASSWORD=admin
+export MYSQL_USER=wordpress
+echo "MIIEogIBAAKCAQEA3BHJHjp7ni0JFjZjAp99tH88KN7XG4oWI8FFBJBKtTZTa4cx84c2ZBz+UaSLtQ4S/dJL3yYFq5cxMlqjnPv9p1edIAfhM+wkd0Ls89kpX9/OjnVa1xjfnivQr+TD0eoO1Vf6WtKO8TkvPEac04IfdjOu7krQmTqRyDSlDu23SLfrWZKOtIgIQF6jeKzJmGKMbMa9rCJyV9Il/TWo9wWJe/zCDHBmdIGRjuJMXub4t5EScan8NtnSyyYcFRuIjfxlUtqHfsxQ9UAR/iWKJDg2ZdNaNXwhe/AbyJYoLnhCIX4vdl4h3cPhXFoAVSGkWc9d9PtiCZpnxbqnw9aUNQf2aQIDAQABAoIBADjloEngdPWAT0ke5ppXAfkYrEUk2BiWqwKzhVSYubgAQ7EZUyDTZIydsmMJV9WHvgFBzbvz6KNkg6OxK3v66qnJTSZq4x65fvQWqYyiKMBQ7OaIEORr2eTbDylqy/YJvawLAv9YUPys/DlpSEKm8dttoVyamzQCoI5Sjho9+5Ug/Utge5jgPUXhIswmmowEJVoiNyYjIKxG+q/UrmD0n6bMeCen3RBKDSw7/cwu8w8loxkBjCtl0SpdCL4orCXsAx6nDsfJ0ge4usu8FW539Rc7R0PHfpupCu8hKXrjkSoIraj5hjAehvQUc3Fck37Ib4g7HxiDjKO6qw/MVj462AECgYEA7yMHEMpAoU6SOz39oGzMAk4WB37cn+RrCxquCtBx61Z5fG5yRyhRUI5OGqqNPJaAg3ux5/SrBMrSAE9iBmh5WXaed7InBgodvbSWxPeWijVySiVFdCKit2U7Hioxj3A4oR3Wy+mVMcx2V/YpnVN7yVA6fPQfdAAW2Wgdme8q+XkCgYEA65aMWnrmnT42KDW1GmJ7cbr659k8DLfwykiNck+ga7FLsCk7sarXkxkY/4qUPy38s7m0zERUFY2HyxrLe6QPHhI65E3YZIT1U/pn1TYZR2WOSlYYLqF3WtY9asV4EnTuLCzoSP79Q7UvsPxW9PbqsSiUybZv/wYSyCge5kpwmHECgYBdUBjAt3sytnsfPNhMEkglGh1EfX9PsQ0H/zgsphvdzheHs31KQPRB79WQWD7Who/NPqY0MefN7eq2DkPc5kV74GqDoHPTynzCesZeQ5Jtid94CUUpxR4jXBAOfD5sj0i5rfAUD6iVDwia2EZyypHCA1lfSs8/L4269gKe/5GQWQKBgEsyv9Q1vJzeebz1/7vPSaXw0BvnXGKW6BY5eGTPg948NnOhhbtdU/hRH4iZ/F36WNopYct91/UVOw4anG733Bd2LDQpoPPc+M34dOI6pXEDupqBxrBDu+xTzEDjjUMe7dNN9ksukTrmf7WXpk4E7r7jvDJyuGcH0kDvhYVup2gRAoGAFEXu/Z5HI8we6nUyW8NA4jAwYbY/0VCOZt2tlHgihFUSEr/AqjUqV8Zf2YxenKnhsK/NwPOBO94k7aYuLC354al0LbizmTcgLYsRjhyRypRZue45x/SoC6k2O1EV2iOz44v3BxEwKhInd1HKBnrmEOFiL+lWnqmtRnNtqN7DoEw=" > ~/.ssh/id_rsa
+echo $MYSQL_USER > ~/env_test.txt
+md ~/project2/
+wget -O ~/project2/playbook.yml https://raw.githubusercontent.com/murzilius/j2_AWS_cloud/master/playbook.yml
+cd ~/project2/
+git init
+git remote add j2_AWS_cloud https://github.com/murzilius/j2_AWS_cloud
+git pull https://github.com/murzilius/j2_AWS_cloud
+echo "[srv:vars]" > ~/project2/hosts
+echo "ansible_ssh_user=ubuntu" > ~/project2/hosts
+echo "ansible_ssh_private_key_file=/root/.ssh/id_rsa" > ~/project2/hosts
+echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no'" > ~/project2/hosts
+echo "[srv]" > ~/project2/hosts
+echo "${public_ip_for_Web}" > ~/project2/hosts
+
