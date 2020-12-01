@@ -1,0 +1,226 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+
+  vars_files:
+    - secrets.yml
+
+  tasks:
+
+  - name: Ensure old versions of Docker are not installed.
+    package:
+      name:
+        - docker
+        - docker-engine
+        - docker.io
+        - containerd
+        - runc  
+      state: absent
+
+  # Install packages
+  - name: Install packages
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    loop:
+      - openjdk-8-jdk
+      - git
+      - apt-transport-https 
+      - ca-certificates 
+      - curl 
+      - gnupg-agent 
+      - software-properties-common
+    when: ansible_os_family == 'Debian'
+
+  # Add Jenkins key
+  - name: Add jenkins and docker apt-key
+    apt_key:
+      url: "{{ item }}"
+      state: present
+    loop:
+      -  "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
+      -  "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    when: ansible_os_family == 'Debian' 
+
+  # Add Jenkins repo
+  - name: Add jenkins and docker repo
+    apt_repository:
+      repo: "{{ item }}" 
+      state: present
+    loop: 
+      - "deb http://pkg.jenkins.io/debian-stable binary/"
+      - "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    when: ansible_os_family == 'Debian'
+
+  # Install Jenkins
+  - name: Install Jenkins and Docker
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    loop:
+      - jenkins
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io
+    notify:
+      - create init.groovy.d
+      - add user
+      - restart jenkins
+      - wait
+    when: ansible_os_family == 'Debian'
+
+  # Run all handlers 
+  - name: force running of all notified handlers now
+    meta: flush_handlers  
+
+  # Install docker-compose
+  - name: Install Docker Compose (if configured).
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.25.5/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+
+  # set git user and mail
+  - name: Set git username and usermail
+    shell:  git config --global user.email "jenkins" &&  git config --global user.name "jenkins"
+    become: yes
+    become_user: jenkins
+
+  # Add user jenkins to group docker
+  - name: 'add users to docker group'
+    user:
+      name: jenkins
+      groups: docker
+      append: yes
+
+  # Download jenkins-cli.jar to add job
+  - name: Download jenkins-cli.jar
+    get_url:
+      url: "{{ path_to_cli  }}"
+      dest: "{{ dest_cli }}"
+
+  # Install plugin warning-ng
+  - name: Install  plugins to jenkins
+    shell:
+      cmd: java -jar {{ dest_cli }}/{{ name_cli }} -s {{ path_to_http  }}  -auth {{ username  }}:{{ userpass }} install-plugin "{{ item }}"
+    loop:
+      - git
+    notify:
+      - restart jenkins
+      - wait
+      - remove init.groovy.d
+
+  # Run all handlers 
+  - name: force running of all notified handlers now
+    meta: flush_handlers  
+ 
+  # Create workspace folders deploy and update
+  - name: Create workspace folders deploy and  update
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: jenkins
+      group: jenkins
+      mode: 0775
+      recurse: yes
+    loop:
+      - "{{ workspace_path_update }}"
+      - "{{ workspace_path_deploy }}"
+
+  # Copy job-file to host for update job
+  - name: Copy an update job.xml
+    template:
+      src:  update.job.xml.j2
+      dest: "{{ dest_cli }}/{{ job_file_update }}"
+
+  # Copy job-file to host for deploy job
+  - name: Copy a deploy job.xml
+    template:
+      src:  deploy.job.xml.j2
+      dest: "{{ dest_cli }}/{{ job_file_deploy }}"
+
+  - name: Copy deploy's files
+    template:
+      src:  "{{ item }}.j2"
+      dest: "{{ workspace_path_deploy }}/{{ item }}"
+    loop:
+      - .env
+      - wp-config.php
+  
+  # Add a webhook
+  - name: Jenkins webhook for deploy
+    uri:
+      url: https://api.github.com/repos/rgsx/j2_deploy/hooks
+      method: post
+      headers:
+        Authorization: "token {{ github_token }}"
+      body:
+        name: web
+        active: true
+        events:
+          - push
+          - pull_request
+        config:
+          url: http://{{ username }}:{{ userpass }}@{{ ansible_default_ipv4.address }}:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}
+      status_code: 200,201
+      body_format: json
+ 
+  # Add a deploy job to Jenkins 
+  - name: Add a deploy job to Jenkins
+    shell:
+      cmd: cat {{ dest_cli }}/{{ job_file_deploy }} | java -jar {{ dest_cli }}/{{ name_cli }} -s {{ path_to_http  }}  -auth {{ username  }}:{{ userpass }} create-job {{ job_workspace_name_deploy }}
+
+  # Add a update job to Jenkins 
+  - name: Add an update job to Jenkins
+    shell:
+      cmd: cat {{ dest_cli }}/{{ job_file_update }} | java -jar {{ dest_cli }}/{{ name_cli }} -s {{ path_to_http  }}  -auth {{ username  }}:{{ userpass }} create-job {{ job_workspace_name_update }}
+
+  # Run a update job to Jenkins 
+  - name: Run an update job in Jenkins
+    shell:
+      cmd: java -jar {{ dest_cli }}/{{ name_cli }} -s {{ path_to_http  }}  -auth {{ username  }}:{{ userpass }} build {{ job_workspace_name_update }}
+
+
+  handlers:
+
+  # Create folder for groovy script
+  - name: create init.groovy.d 
+    file:
+      path: "{{ jenkins_home }}/init.groovy.d"
+      state: directory
+      owner: jenkins
+      group: jenkins
+      mode: 0775
+      recurse: yes
+    
+  # Copy groovy script, that add user to Jenkins
+  - name: add user
+    template:
+      src: init.groovy.j2
+      dest: "{{ jenkins_home }}/init.groovy.d/init.groovy"
+
+  # Restart Jenkins for adding user
+  - name: restart jenkins
+    service:
+      name: jenkins
+      state: restarted
+
+  # Wait for restarting Jenkins
+  - name: wait 
+    uri:
+      url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+      status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 1
+
+  # Remove groovy script
+  - name: remove init.groovy.d
+    file:
+      path: "{{ jenkins_home }}/init.groovy.d"
+      state: absent
+
