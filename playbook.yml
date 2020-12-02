@@ -150,23 +150,23 @@
       - .env
       - wp-config.php
   
-  # Add a webhook
-  #- name: Jenkins webhook for deploy
-  #  uri:
-  #    url: https://api.github.com/repos/rgsx/j2_deploy/hooks
-  #    method: post
-  #    headers:
-  #      Authorization: "token {{ github_token }}"
-  #    body:
-  #      name: web
-  #      active: true
-  #      events:
-  #        - push
-  #        - pull_request
-  #      config:
-  #        url: http://{{ username }}:{{ userpass }}@{{ ansible_default_ipv4.address }}:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}
-  #    status_code: 200,201
-  #    body_format: json
+   Add a webhook
+  - name: Jenkins webhook for deploy
+    uri:
+      url: https://api.github.com/repos/murzilius/j2_AWS_cloud/hooks
+      method: post
+      headers:
+        Authorization: "token {{ github_token }}"
+      body:
+        name: web
+        active: true
+        events:
+          - push
+          - pull_request
+        config:
+          url: http://{{ username }}:{{ userpass }}@{{ ansible_default_ipv4.address }}:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}
+      status_code: 200,201
+      body_format: json
  
   # Add a deploy job to Jenkins 
   - name: Add a deploy job to Jenkins
@@ -211,7 +211,7 @@
   # Wait for restarting Jenkins
   - name: wait 
     uri:
-      url: "http://18.219.209.6:8080/jnlpJars/jenkins-cli.jar"
+      url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
       status_code: 200
     register: result
     until: result.status == 200

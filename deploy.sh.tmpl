@@ -6,14 +6,14 @@ sudo apt install -y mc
 mkdir /home/ubuntu/project2/
 chmod 777 /home/ubuntu/project2
 cd /home/ubuntu/project2/
-echo "export USERNAME_J="admin" >> /home/ubuntu/project2/deploy.sh
-echo "export USERPASS_J="admin" >> /home/ubuntu/project2/deploy.sh
-echo "export MYSQL_ROOT_PASSWORD=admin" >> /home/ubuntu/project2/deploy.sh
-echo "export MYSQL_PASSWORD="admin" >> /home/ubuntu/project2/deploy.sh
-echo "export MYSQL_USER="wordpress" >> /home/ubuntu/project2/deploy.sh
-echo "export GITHUB_TOKEN="06c117b7a840491aeeb7452c9506bd526fb09d83" >> /home/ubuntu/project2/deploy.sh
-echo "export GITHUB_REPO_NAME="j2_AWS_cloud" >> /home/ubuntu/project2/deploy.sh
-echo "export GITHUB_REPO_PATH="/home/ubuntu/project2" >> /home/ubuntu/project2/deploy.sh
+echo "export USERNAME_J='admin'" >> /home/ubuntu/project2/deploy.sh
+echo "export USERPASS_J='admin'" >> /home/ubuntu/project2/deploy.sh
+echo "export MYSQL_ROOT_PASSWORD='admin'" >> /home/ubuntu/project2/deploy.sh
+echo "export MYSQL_PASSWORD='admin'" >> /home/ubuntu/project2/deploy.sh
+echo "export MYSQL_USER='wordpress'" >> /home/ubuntu/project2/deploy.sh
+echo "export GITHUB_TOKEN='06c117b7a840491aeeb7452c9506bd526fb09d83'" >> /home/ubuntu/project2/deploy.sh
+echo "export GITHUB_REPO_NAME='j2_AWS_cloud'" >> /home/ubuntu/project2/deploy.sh
+echo "export GITHUB_REPO_PATH='/home/ubuntu/project2'" >> /home/ubuntu/project2/deploy.sh
 echo "ansible-playbook -i hosts playbook.yml" >> /home/ubuntu/project2/deploy.sh
 cd /home/ubuntu/project2/
 chown ubuntu deploy.sh
@@ -23,8 +23,9 @@ git remote add j2_AWS_cloud https://github.com/murzilius/j2_AWS_cloud
 git pull https://github.com/murzilius/j2_AWS_cloud
 echo "[srv:vars]" >> /home/ubuntu/project2/hosts
 echo "ansible_ssh_user=ubuntu" >> /home/ubuntu/project2/hosts
-echo "ansible_ssh_private_key_file=/ubuntu/.ssh/id_rsa" >> /home/ubuntu/project2/hosts
+echo "ansible_ssh_private_key_file=/home/ubuntu/.ssh/id_rsa" >> /home/ubuntu/project2/hosts
 echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> /home/ubuntu/project2/hosts
 echo "[srv]" >> /home/ubuntu/project2/hosts
 echo "${public_ip_for_Web}" >> /home/ubuntu/project2/hosts
+chmod 777 hosts
 
