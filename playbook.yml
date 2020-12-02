@@ -86,8 +86,8 @@
   # set git user and mail
   - name: Set git username and usermail
     shell:  git config --global user.email "jenkins" &&  git config --global user.name "jenkins"
-    become: yes
-    become_user: jenkins
+    #become: yes          #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #become_user: jenkins #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   # Add user jenkins to group docker
   - name: 'add users to docker group'
@@ -150,23 +150,23 @@
       - .env
       - wp-config.php
   
-   Add a webhook
-  - name: Jenkins webhook for deploy
-    uri:
-      url: https://api.github.com/repos/murzilius/j2_AWS_cloud/hooks
-      method: post
-      headers:
-        Authorization: "token {{ github_token }}"
-      body:
-        name: web
-        active: true
-        events:
-          - push
-          - pull_request
-        config:
-          url: http://{{ username }}:{{ userpass }}@{{ ansible_default_ipv4.address }}:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}
-      status_code: 200,201
-      body_format: json
+  # Add a webhook
+#  - name: Jenkins webhook for deploy
+#    uri:
+#      url: https://api.github.com/repos/murzilius/j2_AWS_cloud/hooks
+#      method: post
+#      headers:
+#        Authorization: "token {{ github_token }}"
+#      body:
+#        name: web
+#        active: true
+#        events:
+#          - push
+#          - pull_request
+#        config:
+#          url: http://{{ username }}:{{ userpass }}@{{ ansible_default_ipv4.address }}:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}
+#      status_code: 200,201
+#      body_format: json
  
   # Add a deploy job to Jenkins 
   - name: Add a deploy job to Jenkins
