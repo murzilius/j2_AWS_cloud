@@ -16,8 +16,6 @@ echo "export GITHUB_REPO_NAME='j2_AWS_cloud'" >> /etc/profile.d/deploy.sh
 echo "export GITHUB_REPO_PATH='github.com/murzilius/j2_AWS_cloud'" >> /etc/profile.d/deploy.sh
 #echo "ansible-playbook -i hosts playbook.yml" >> /home/ubuntu/project2/deploy.sh
 cd /home/ubuntu/project2/
-#chown ubuntu deploy.sh
-#chmod -x deploy.sh
 git init
 git remote add j2_AWS_cloud https://github.com/murzilius/j2_AWS_cloud
 git pull https://github.com/murzilius/j2_AWS_cloud
@@ -28,7 +26,35 @@ echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> /home/ubuntu/pro
 echo "[srv]" >> /home/ubuntu/project2/hosts
 echo "${public_ip_for_Web}" >> /home/ubuntu/project2/hosts
 chmod 777 hosts
-echo "">>/home/ubuntu/.ssh/id_rsa
+cat <<EOF > /home/ubuntu/.ssh/id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEA3BHJHjp7ni0JFjZjAp99tH88KN7XG4oWI8FFBJBKtTZTa4cx
+84c2ZBz+UaSLtQ4S/dJL3yYFq5cxMlqjnPv9p1edIAfhM+wkd0Ls89kpX9/OjnVa
+1xjfnivQr+TD0eoO1Vf6WtKO8TkvPEac04IfdjOu7krQmTqRyDSlDu23SLfrWZKO
+tIgIQF6jeKzJmGKMbMa9rCJyV9Il/TWo9wWJe/zCDHBmdIGRjuJMXub4t5EScan8
+NtnSyyYcFRuIjfxlUtqHfsxQ9UAR/iWKJDg2ZdNaNXwhe/AbyJYoLnhCIX4vdl4h
+3cPhXFoAVSGkWc9d9PtiCZpnxbqnw9aUNQf2aQIDAQABAoIBADjloEngdPWAT0ke
+5ppXAfkYrEUk2BiWqwKzhVSYubgAQ7EZUyDTZIydsmMJV9WHvgFBzbvz6KNkg6Ox
+K3v66qnJTSZq4x65fvQWqYyiKMBQ7OaIEORr2eTbDylqy/YJvawLAv9YUPys/Dlp
+SEKm8dttoVyamzQCoI5Sjho9+5Ug/Utge5jgPUXhIswmmowEJVoiNyYjIKxG+q/U
+rmD0n6bMeCen3RBKDSw7/cwu8w8loxkBjCtl0SpdCL4orCXsAx6nDsfJ0ge4usu8
+FW539Rc7R0PHfpupCu8hKXrjkSoIraj5hjAehvQUc3Fck37Ib4g7HxiDjKO6qw/M
+Vj462AECgYEA7yMHEMpAoU6SOz39oGzMAk4WB37cn+RrCxquCtBx61Z5fG5yRyhR
+UI5OGqqNPJaAg3ux5/SrBMrSAE9iBmh5WXaed7InBgodvbSWxPeWijVySiVFdCKi
+t2U7Hioxj3A4oR3Wy+mVMcx2V/YpnVN7yVA6fPQfdAAW2Wgdme8q+XkCgYEA65aM
+WnrmnT42KDW1GmJ7cbr659k8DLfwykiNck+ga7FLsCk7sarXkxkY/4qUPy38s7m0
+zERUFY2HyxrLe6QPHhI65E3YZIT1U/pn1TYZR2WOSlYYLqF3WtY9asV4EnTuLCzo
+SP79Q7UvsPxW9PbqsSiUybZv/wYSyCge5kpwmHECgYBdUBjAt3sytnsfPNhMEkgl
+Gh1EfX9PsQ0H/zgsphvdzheHs31KQPRB79WQWD7Who/NPqY0MefN7eq2DkPc5kV7
+4GqDoHPTynzCesZeQ5Jtid94CUUpxR4jXBAOfD5sj0i5rfAUD6iVDwia2EZyypHC
+A1lfSs8/L4269gKe/5GQWQKBgEsyv9Q1vJzeebz1/7vPSaXw0BvnXGKW6BY5eGTP
+g948NnOhhbtdU/hRH4iZ/F36WNopYct91/UVOw4anG733Bd2LDQpoPPc+M34dOI6
+pXEDupqBxrBDu+xTzEDjjUMe7dNN9ksukTrmf7WXpk4E7r7jvDJyuGcH0kDvhYVu
+p2gRAoGAFEXu/Z5HI8we6nUyW8NA4jAwYbY/0VCOZt2tlHgihFUSEr/AqjUqV8Zf
+2YxenKnhsK/NwPOBO94k7aYuLC354al0LbizmTcgLYsRjhyRypRZue45x/SoC6k2
+O1EV2iOz44v3BxEwKhInd1HKBnrmEOFiL+lWnqmtRnNtqN7DoEw=
+-----END RSA PRIVATE KEY-----
+EOF
 chmod 600 /home/ubuntu/.ssh/id_rsa
 chown ubuntu /home/ubuntu/.ssh/id_rsa
 
