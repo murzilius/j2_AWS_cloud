@@ -1,6 +1,5 @@
 /db/*
-deploy.sh
-secrets.yml
+deploy.sh.tmpl
 *.tfvars
 *.tfstate
 *.backup

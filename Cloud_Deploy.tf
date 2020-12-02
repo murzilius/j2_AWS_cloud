@@ -67,6 +67,14 @@ filter {
 output "public_ip_for_Web" {     //output public IP for Deploy server
   value = aws_instance.web.public_ip
 }
-output "public_ip_for_Deply" {     //output public IP for Deploy server
+output "public_ip_for_Deploy" {     //output public IP for Deploy server
   value = aws_instance.deploy.public_ip
 }
+/*variable "AWS_private" {
+  type    = string
+  default = "${env.AWS_private}"
+}
+output "AWS_private" {     //output public IP for Deploy server
+  value = "${env.AWS_private}"
+  }
+ */ 
