@@ -108,7 +108,7 @@
       cmd: java -jar {{ dest_cli }}/{{ name_cli }} -s {{ path_to_http  }}  -auth {{ username  }}:{{ userpass }} install-plugin "{{ item }}"
     loop:
       - git
-      - pipeline
+      - workflow-aggregator:2.6
     notify:
       - restart jenkins
       - wait
