@@ -21,7 +21,7 @@
   rm -r ./{{ github_repo }}
 fi
 
-git clone https://{{ github_token }}@{{ github_repo_path }} &amp;&amp; \
+git clone https://{{ github_repo_path }} &amp;&amp; \
 cd ./{{ github_repo }} 
 
 if [ -d ./www ]; then
