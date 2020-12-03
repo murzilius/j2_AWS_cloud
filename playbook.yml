@@ -85,7 +85,7 @@
 
   # set git user and mail
   - name: Set git username and usermail
-    shell:  git config --global user.email "jenkins" &&  git config --global user.name "jenkins"
+    shell:  git config --global user.email "murzilius@gmail.com" &&  git config --global user.name "murzilius"
     #become: yes          #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     #become_user: jenkins #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
