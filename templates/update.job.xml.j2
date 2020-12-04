@@ -1,46 +1,41 @@
 <?xml version='1.1' encoding='UTF-8'?>
-<project>
-  <actions/>
-  <description></description>
+<flow-definition plugin="workflow-job@2.40">
+  <description>Wordpress Latest install</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.87">
+    <script>node {
+    stage(&apos;Git Clone&apos;) { 
+        
+        sh &quot;git clone https://c7886025cc265940259fba6b3d60c27f73aece95@github.com/murzilius/j2_AWS_cloud&quot;
+        
+    }
+    stage(&apos;Get Wordpress&apos;) { 
+        
+        sh &quot;cd j2_AWS_cloud &amp;&amp; curl -o wordpress.tar.gz -fSL &apos;https://wordpress.org/latest.tar.gz&apos;&quot;
+    }
+    stage(&apos;Unpack&apos;) {
+       
+        sh  &quot;cd j2_AWS_cloud &amp;&amp; tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  rm wordpress.tar.gz &amp;&amp; mv  ./w
+ordpress ./www&quot;
+        
+    }
+    
+    stage(&apos;Push to Git&apos;) {
+        
+         sh &quot;cd j2_AWS_cloud &amp;&amp; git add ./www &amp;&amp; git commit -a -m &apos;Jenkins result&apos; &amp;&amp; gi
+t push origin --all&quot;
+    }
+    
+    stage(&apos;Clean UP&apos;) { 
+        
+        sh &quot;rm -r ./j2_AWS_cloud&quot;
+        
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
   <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers>
-    <hudson.triggers.TimerTrigger>
-      <spec>*/60 * * * *</spec>
-    </hudson.triggers.TimerTrigger>
-  </triggers>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>if [ -d ./{{ github_repo }}	]; then
-  rm -r ./{{ github_repo }}
-fi
-
-git clone https://{{ github_repo_path }} &amp;&amp; \
-cd ./{{ github_repo }} 
-
-if [ -d ./www ]; then
- rm -r ./www
-fi
-
-curl -o wordpress.tar.gz -fSL &quot;https://wordpress.org/latest.tar.gz&quot; &amp;&amp; \
-tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  \
-rm wordpress.tar.gz &amp;&amp; \
-mv  ./wordpress ./www  &amp;&amp; \
-echo &quot;${BUILD_NUMBER}- `date`&quot; &gt; build_info &amp;&amp; \
-git add . &amp;&amp; \
-git commit -m &quot;Build Number: ${BUILD_NUMBER}&quot; &amp;&amp; \
-git push origin --all &amp;&amp; \
-cd .. &amp;&amp; \
-rm -r ./*
-#curl http://{{ username }}:{{ userpass }}@localhost:8080/job/{{ job_workspace_name_deploy }}/build?token={{ token_remote_deploy }}</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
+</flow-definition>

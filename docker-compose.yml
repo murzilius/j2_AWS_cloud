@@ -5,7 +5,7 @@ services:
   db:
     image: mysql:8.0
     container_name: db
-    restart: unless-stopped
+   # restart: unless-stopped
     env_file: .env
     environment:
       - MYSQL_DATABASE=wordpress
@@ -18,7 +18,7 @@ services:
       - db
     build: ./php-fpm 
     container_name: wordpress
-    restart: unless-stopped
+  #  restart: unless-stopped
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -33,7 +33,7 @@ services:
       - wordpress
     image: nginx:1.17-alpine
     container_name: webserver
-    restart: unless-stopped
+  #  restart: unless-stopped
     ports:
       - "80:80"
     volumes:
