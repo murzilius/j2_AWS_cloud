@@ -16,15 +16,13 @@
     }
     stage(&apos;Unpack&apos;) {
        
-        sh  &quot;cd j2_AWS_cloud &amp;&amp; tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  rm wordpress.tar.gz &amp;&amp; mv  ./w
-ordpress ./www&quot;
+        sh  &quot;cd j2_AWS_cloud &amp;&amp; tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  rm wordpress.tar.gz &amp;&amp; mv  ./wordpress ./www&quot;
         
     }
     
     stage(&apos;Push to Git&apos;) {
         
-         sh &quot;cd j2_AWS_cloud &amp;&amp; git add ./www &amp;&amp; git commit -a -m &apos;Jenkins result&apos; &amp;&amp; gi
-t push origin --all&quot;
+         sh &quot;cd j2_AWS_cloud &amp;&amp; git add ./www &amp;&amp; git commit -a -m &apos;Jenkins result&apos; &amp;&amp; git push origin --all&quot;
     }
     
     stage(&apos;Clean UP&apos;) { 
