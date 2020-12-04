@@ -4,3 +4,4 @@
 *.tfstate
 *.backup
 /.terraform
+update DSL workin templete .txt
