@@ -7,7 +7,7 @@
     <script>node {
     stage(&apos;Git Clone&apos;) { 
         
-        sh &quot;git clone https://c7886025cc265940259fba6b3d60c27f73aece95@github.com/murzilius/j2_AWS_cloud&quot;
+        sh &quot;git clone https://{{ github_token }}@{{ github_repo_path }}&quot;
         
     }
     stage(&apos;Get Wordpress&apos;) { 
