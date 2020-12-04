@@ -85,9 +85,9 @@
 
   # set git user and mail
   - name: Set git username and usermail
-    shell:  git config --global user.email "murzilius@gmail.com" &&  git config --global user.name "murzilius"
-    #become: yes          #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #become_user: jenkins #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    shell:  git config --global user.email "jenlins" &&  git config --global user.name "jenkins"
+    become: yes          #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    become_user: jenkins #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   # Add user jenkins to group docker
   - name: 'add users to docker group'
