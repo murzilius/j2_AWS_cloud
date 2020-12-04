@@ -5,31 +5,32 @@
   <properties/>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.87">
     <script>node {
-    stage(&apos;Git Clone&apos;) { 
-        
-        sh &quot;git clone https://{{ github_token }}@{{ github_repo_path }}&quot;
-        
+    stage(&apos;Clean UP&apos;) {.
+........
+        sh &quot;rm -r -f ./{{ github_repo }}&quot;
+........
     }
-    stage(&apos;Get Wordpress&apos;) { 
-        
-        sh &quot;cd j2_AWS_cloud &amp;&amp; curl -o wordpress.tar.gz -fSL &apos;https://wordpress.org/latest.tar.gz&apos;&quot;
+    stage(&apos;Git Clone&apos;) {.
+........
+        sh &quot;git clone https://{{ github_token }}@{{ github_repo_path }}&quot;
+........
+    }
+    stage(&apos;Get Wordpress&apos;) {.
+........
+        sh &quot;cd {{ github_repo }} &amp;&amp; curl -o wordpress.tar.gz -fSL &apos;https://wordpress.org/latest.tar.gz&apos;&quot;
     }
     stage(&apos;Unpack&apos;) {
-       
-        sh  &quot;cd j2_AWS_cloud &amp;&amp; tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  rm wordpress.tar.gz &amp;&amp; mv  ./wordpress ./www&quot;
-        
+.......
+        sh  &quot;cd {{ github_repo }} &amp;&amp; tar -xzf wordpress.tar.gz -C ./ &amp;&amp;  rm wordpress.tar.gz &quot;
+........
     }
-    
+....
     stage(&apos;Push to Git&apos;) {
-        
-         sh &quot;cd j2_AWS_cloud &amp;&amp; git add ./www &amp;&amp; git commit -a -m &apos;Jenkins result&apos; &amp;&amp; git push origin --all&quot;
+........
+         sh &quot;cd j2_AWS_cloud &amp;&amp; git add --all &amp;&amp; git commit -a -m &apos;Jenkins result&apos; &amp;&amp; git push origin --all&quot;
     }
-    
-    stage(&apos;Clean UP&apos;) { 
-        
-        sh &quot;rm -r ./j2_AWS_cloud&quot;
-        
-    }
+....
+....
 }
 </script>
     <sandbox>true</sandbox>
