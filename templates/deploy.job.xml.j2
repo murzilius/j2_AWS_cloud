@@ -38,22 +38,7 @@
   <builders>
     <hudson.tasks.Shell>
       <command>
- if [ -f ./docker-compose.yml ] ; then
- docker-compose stop &amp;&amp; \
- docker-compose down &amp;&amp; \
- rm ./docker-compose.yml &amp;&amp; \
- rm -r ./www &amp;&amp; \
- rm -r ./php-fpm &amp;&amp; \
- rm -r ./nginx-conf
-fi
-
-  cp -r ./git/www ./www &amp;&amp; \
-  cp -r ./git/php-fpm ./php-fpm &amp;&amp; \
-  cp -r ./git/nginx-conf ./nginx-conf &amp;&amp; \
-  cp  ./git/docker-compose.yml  ./docker-compose.yml &amp;&amp; \
-  cp ./wp-config.php  ./www/wp-config.php &amp;&amp; \
-  rm -r ./git &amp;&amp; \
-  docker-compose up -d --build
+echo "Hi"
 
 </command>
     </hudson.tasks.Shell>
