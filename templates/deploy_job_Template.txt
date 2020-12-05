@@ -1,13 +1,17 @@
- node {
+node {
+    stage('Clean UP') {
+
+        sh "rm -r -f ./j2_AWS_cloud"
+
+    }
     stage('Git Clone') { 
         
         sh "git clone https://c7886025cc265940259fba6b3d60c27f73aece95@github.com/murzilius/j2_AWS_cloud"
         
     }
     stage('Docker Down') { 
-        sh "cp wp-config.php ./j2_AWS_cloud/www/"
+        sh "cp wp-config.php ./j2_AWS_cloud/wordpress/"
         sh "cp .env ./j2_AWS_cloud/"
         sh "cd j2_AWS_cloud && docker-compose down"
     }
-   
-}
+}    
