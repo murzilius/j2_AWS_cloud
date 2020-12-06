@@ -8,23 +8,27 @@
     <script>node {
     stage(&apos;Clean UP&apos;) {
 
-        sh &quot;rm -r -f ./j2_AWS_cloud&quot;
+        sh &quot;rm -r -f ./ {{ github_repo }}&quot;
 
     }
     stage(&apos;Git Clone&apos;) { 
         
-        sh &quot;git clone https://c7886025cc265940259fba6b3d60c27f73aece95@github.com/murzilius/j2_AWS_cloud&quot;
+        sh &quot;git clone https://{{ github_token }}@{{ github_repo_path }}&quot;
         
     }
     stage(&apos;Docker Down&apos;) { 
-        sh &quot;cp wp-config.php ./j2_AWS_cloud/wordpress/&quot;
-        sh &quot;cp .env ./j2_AWS_cloud/&quot;
-        sh &quot;cd j2_AWS_cloud &amp;&amp; docker-compose down&quot;
+        sh &quot;cp wp-config.php ./ {{ github_repo }}/wordpress/&quot;
+        sh &quot;cp .env ./ {{ github_repo }}/&quot;
+        sh &quot;cd  {{ github_repo }} &amp;&amp; docker-compose down&quot;
+    }
+    stage(&apos;Docker ARRISE&apos;) { 
+        
+        sh &quot;cd  {{ github_repo }} &amp;&amp; docker-compose up&quot;
     }
 }    </script>
     <sandbox>true</sandbox>
   </definition>
   <triggers/>
-  <authToken>j2_AWS_cloud</authToken>
+  <authToken> {{ github_repo }}</authToken>
   <disabled>false</disabled>
 </flow-definition>
