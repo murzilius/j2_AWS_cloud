@@ -8,7 +8,7 @@
     <script>node {
     stage(&apos;Clean UP&apos;) {
 
-        sh &quot;rm -r -f ./ {{ github_repo }}&quot;
+        sh &quot;rm -r -f ./{{ github_repo }}&quot;
 
     }
     stage(&apos;Git Clone&apos;) { 
@@ -17,18 +17,18 @@
         
     }
     stage(&apos;Docker Down&apos;) { 
-        sh &quot;cp wp-config.php ./ {{ github_repo }}/wordpress/&quot;
-        sh &quot;cp .env ./ {{ github_repo }}/&quot;
+        sh &quot;cp wp-config.php ./{{ github_repo }}/wordpress/&quot;
+        sh &quot;cp .env ./{{ github_repo }}/&quot;
         sh &quot;cd  {{ github_repo }} &amp;&amp; docker-compose down&quot;
     }
     stage(&apos;Docker ARRISE&apos;) { 
         
-        sh &quot;cd  {{ github_repo }} &amp;&amp; docker-compose up&quot;
+        sh &quot;cd {{ github_repo }} &amp;&amp; docker-compose up&quot;
     }
 }    </script>
     <sandbox>true</sandbox>
   </definition>
   <triggers/>
-  <authToken> {{ github_repo }}</authToken>
+  <authToken>{{ github_repo }}</authToken>
   <disabled>false</disabled>
 </flow-definition>
