@@ -1,48 +1,30 @@
 <?xml version='1.1' encoding='UTF-8'?>
-<project>
+<flow-definition plugin="workflow-job@2.40">
+  <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
-    <configVersion>2</configVersion>
-    <userRemoteConfigs>
-      <hudson.plugins.git.UserRemoteConfig>
-        <url>https://{{ github_repo_path }}</url>
-      </hudson.plugins.git.UserRemoteConfig>
-    </userRemoteConfigs>
-    <branches>
-      <hudson.plugins.git.BranchSpec>
-        <name>*/master</name>
-      </hudson.plugins.git.BranchSpec>
-    </branches>
-    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-    <submoduleCfg class="list"/>
-    <extensions>
-      <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
-        <relativeTargetDir>git</relativeTargetDir>
-      </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
-    </extensions>
-  </scm>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <authToken>{{ token_remote_deploy }}</authToken>
-  <triggers>
-    <hudson.triggers.SCMTrigger>
-      <spec>{{ scm_cron_deploy }}</spec>
-      <ignorePostCommitHooks>false</ignorePostCommitHooks>
-    </hudson.triggers.SCMTrigger>
-  </triggers>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>
-echo "Hi"
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.87">
+    <script>node {
+    stage(&apos;Clean UP&apos;) {
 
-</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
+        sh &quot;rm -r -f ./j2_AWS_cloud&quot;
+
+    }
+    stage(&apos;Git Clone&apos;) { 
+        
+        sh &quot;git clone https://c7886025cc265940259fba6b3d60c27f73aece95@github.com/murzilius/j2_AWS_cloud&quot;
+        
+    }
+    stage(&apos;Docker Down&apos;) { 
+        sh &quot;cp wp-config.php ./j2_AWS_cloud/wordpress/&quot;
+        sh &quot;cp .env ./j2_AWS_cloud/&quot;
+        sh &quot;cd j2_AWS_cloud &amp;&amp; docker-compose down&quot;
+    }
+}    </script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <authToken>j2_AWS_cloud</authToken>
+  <disabled>false</disabled>
+</flow-definition>

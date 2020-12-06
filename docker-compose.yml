@@ -14,8 +14,8 @@ services:
     command: '--default-authentication-plugin=mysql_native_password'
 
   wordpress:
-#    depends_on:
-#      - db
+    depends_on:
+      - db
     image: crunchgeek/php-fpm:7.3
     container_name: wordpress
   #  restart: unless-stopped
