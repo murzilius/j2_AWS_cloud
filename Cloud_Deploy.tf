@@ -53,11 +53,11 @@ resource "aws_key_pair" "AWS" {
   key_name   = "AWS_for_test"
   public_key = file("d:\\Job2\\AWS\\keys\\AWS.pub") //give servers Public Key
 }
-/*
-resource "aws_eip" "deploy" {
-  instance = aws_instance.deploy.id //Assign Elastic IP to Deploy Server DO IT ONCE!!!!!!!!!!!!
+
+resource "aws_eip" "web" {
+  instance = aws_instance.web.id //Assign Elastic IP to Deploy Server DO IT ONCE!!!!!!!!!!!!
 }
-*/
+
 data "aws_ami" "ubuntu_latest"{     //Take latest ubuntu server 20 Image
  owners = ["099720109477"]
  most_recent = true
