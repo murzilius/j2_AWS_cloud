@@ -39,3 +39,8 @@ services:
     volumes:
       - ./wordpress:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
+      
+      
+      
+      
+      test
